@@ -53,7 +53,9 @@ func (client *gocloak) getRequest(ctx context.Context) *resty.Request {
 			ctx = httptrace.WithClientTrace(ctx, othttp.NewClientTrace(ctx))
 			req.SetContext(ctx)			
 			propagator := propagation.HTTPTraceContextPropagator{}
+			fmt.Println(req.Header)
 			propagator.Inject(ctx, req.Header)
+			fmt.Println(req.Header)
 			return nil
 		})
 	fmt.Println(errT)
