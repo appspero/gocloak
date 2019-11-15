@@ -14,7 +14,9 @@ import (
 	"github.com/appspero/gocloak/pkg/jwx"
 
 	"go.opentelemetry.io/otel/global"
-	"go.opentelemetry.io/otel/plugin/httptrace"
+	othttp "go.opentelemetry.io/otel/plugin/httptrace"
+	"go.opentelemetry.io/otel/propagation"
+	"net/http/httptrace"
 )
 
 type gocloak struct {
@@ -48,8 +50,10 @@ func (client *gocloak) getRequest(ctx context.Context) *resty.Request {
 	tr := global.TraceProvider().GetTracer("example/client")
 	errT := tr.WithSpan(ctx, "say hello",
 		func(ctx context.Context) error {
-			ctx, req.RawRequest = httptrace.W3C(ctx, req.RawRequest)
-			httptrace.Inject(ctx, req.RawRequest)
+			ctx = httptrace.WithClientTrace(ctx, othttp.NewClientTrace(ctx))
+			req.SetContext(ctx)			
+			propagator := propagation.HTTPTraceContextPropagator{}
+			propagator.Inject(ctx, req.Header)
 			return nil
 		})
 	fmt.Println(errT)
