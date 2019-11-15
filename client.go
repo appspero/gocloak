@@ -11,7 +11,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-resty/resty/v2"
 
-	"github.com/Nerzal/gocloak/v3/pkg/jwx"
+	"github.com/appspero/gocloak/pkg/jwx"
 
 	"go.opentelemetry.io/otel/global"
 	"go.opentelemetry.io/otel/plugin/httptrace"
